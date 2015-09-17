@@ -1,7 +1,10 @@
 aiohttp==0.15.1
+aiohttp-wsgi==0.2.4
 appdirs==1.4.0
 asyncio==3.4.3
+chardet==2.3.0
 ConfigArgParse==0.9.3
+dj-database-url==0.3.0
 Django==1.8.3
 django-filter==0.10.0
 djangorestframework==3.1.3
