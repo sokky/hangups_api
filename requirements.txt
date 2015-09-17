@@ -19,3 +19,4 @@ readlike==0.1.1
 ReParser==1.4.2
 requests==2.6.0
 six==1.9.0
+whitenoise==2.0.3

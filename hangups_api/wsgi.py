@@ -13,8 +13,11 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hangups_api.settings")
 
-
 application = get_wsgi_application()
+
+from whitenoise.django import DjangoWhiteNoise
+
+application = DjangoWhiteNoise(application)
 
 import hangups_api.startup as startup
 # hangout情報の取得
