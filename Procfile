@@ -1,1 +1,1 @@
-web: python manage.py runserver 8000
+web: gunicorn hangups_api.wsgi --log-file -
