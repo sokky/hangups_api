@@ -1,8 +1,9 @@
 from django.conf.urls import url, include
-from api.views import user_list, login
+from api.views import HangupsApiUsersView, ConvListJson, ConvListView
 
 
 urlpatterns = [
-    url(r'^users/$', user_list),
-    url(r'^login/$', login)
+    url(r'^hangups_api_users/$', HangupsApiUsersView.as_view()),
+    url(r'^hangups_api_users/(?P<user_id>\w+)/$', ConvListView.as_view()),
+    url(r'^hangups_api_users/(?P<user_id>\w+)\.json', ConvListJson.as_view()),
 ]

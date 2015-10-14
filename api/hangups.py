@@ -6,12 +6,14 @@ import api.members
 
 
 class HangupsApi(object):
+    """Hangupに接続、イベント等を行うクラス"""
 
-    def __init__(self, refresh_token_path):
+    def __init__(self, refresh_token_path, id):
 
         self._client = None
         self._conv_list = None
         self._user_list = None
+        self._id = id
 
         try:
             cookies = hangups.auth.get_auth_stdin(refresh_token_path)
@@ -33,7 +35,7 @@ class HangupsApi(object):
     @asyncio.coroutine
     def _on_connect(self, initial_data):
         """Handle connecting for the first time"""
-        print('Connected!')
+        # print('Connected!')
         self._retry = 0
         self._user_list = yield from hangups.build_user_list(
             self._client,
@@ -48,7 +50,7 @@ class HangupsApi(object):
         self._conv_list.on_event.add_observer(self._on_event)
 
         m = api.members.Members
-        m.add_client(self)
+        m.add_client(self, self._id)
 
         for c in self._conv_list.get_all():
             user = {}

@@ -16,7 +16,7 @@ def get_hangout_info():
         with open(path, 'w') as f:
             # tokenファイルの最後に改行はいれないこと
             f.write(u.token)
-        t = threading.Thread(target=HangupsApi, args=(path,))
+        t = threading.Thread(target=HangupsApi, args=(path, u.user_id))
         t.start()
 
     # TODO tempfileが残るので掃除をすること。

@@ -8,3 +8,4 @@ class HangupsApiUser(models.Model):
     token = models.CharField(max_length=200)
     # ユーザの名前など、識別させるためのフィールド
     memo = models.CharField(max_length=200)
+
