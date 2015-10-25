@@ -38,7 +38,10 @@ class ConvListView(View):
         m = Members
         client = m.get_client(user_id)
         if client:
-            return HttpResponse("hoge")
+            ret = ['conv_id']
+            for conv in client._conv_list.get_all():
+                ret.append(conv.id_)
+            return HttpResponse(' '.join(ret))
         else:
             # userがいない場合
             raise Http404
@@ -51,9 +54,22 @@ class ConvListJson(View):
         if client:
             serializer = ConversationSerializer(client._conv_list.get_all(), many=True)
             return JSONResponse(serializer.data)
-        else:
-            # userがいない場合
-            raise Http404
+        # userがいない場合
+        raise Http404
+
+
+class ConvJson(View):
+    def get(self, request, user_id, conv_id):
+        m = Members
+        client = m.get_client(user_id)
+        if client:
+            for conv in client._conv_list.get_all():
+                if conv.id_ == conv_id:
+                    serializer = ConversationSerializer(conv)
+                    return JSONResponse(serializer.data)
+
+        # 該当するuser, conv_idがない場合
+        raise Http404
 
 
 @csrf_exempt
