@@ -10,6 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('user_id', 'memo')
 
 
+class MessageSerializer(serializers.Serializer):
+    user_id = serializers.CharField()
+    conv_id = serializers.CharField()
+    message = serializers.CharField()
+
+
 class HangupsUserIDSerializer(serializers.Serializer):
     chat_id = serializers.CharField()
     gaia_id = serializers.CharField()

@@ -9,3 +9,9 @@ class HangupsApiUser(models.Model):
     # ユーザの名前など、識別させるためのフィールド
     memo = models.CharField(max_length=200)
 
+
+class HangupsApiToken(models.Model):
+    # 当システムに登録されるユーザのID
+    user_id = models.CharField(max_length=200)
+    # 内部で利用するtoken。手動入力はしない
+    token = models.CharField(max_length=200, null=True)

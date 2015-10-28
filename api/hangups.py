@@ -2,7 +2,9 @@ import sys
 import asyncio
 import hangups
 import hangups.conversation_event
+import hangups.auth
 import api.members
+import tempfile
 
 
 class HangupsApi(object):
@@ -29,7 +31,7 @@ class HangupsApi(object):
         #asyncio.async(
         #        self._client.connect()
         #    ).add_done_callback(lambda future: future.result())
-        loop = asyncio.get_event_loop()
+        # loop = asyncio.get_event_loop()
         loop.run_until_complete(self._client.connect())
 
     @asyncio.coroutine
@@ -51,27 +53,32 @@ class HangupsApi(object):
 
         m = api.members.Members
         m.add_client(self, self._id)
-
-        for c in self._conv_list.get_all():
-            user = {}
-            for u in c.users:
-                #user作成
-                user[u.id_] = u.full_name
-            print(c.id_)
-            print(c.name)
-            for e in c.events:
-                print(e, e.timestamp)
-                if isinstance(e, hangups.conversation_event.ChatMessageEvent):
-                    print(user[e.user_id], e.text)
+        loop = asyncio.get_event_loop()
+        m.add_loop(loop, self._id)
 
     def _on_event(self, conv_event):
         """Open conversation tab for new messages when they arrive."""
         conv = self._conv_list.get(conv_event.conversation_id)
         user = conv.get_user(conv_event.user_id)
-        print(conv)
-        print(user)
 
     def _on_quit(self):
         """Handle the user quitting the application."""
         future = asyncio.async(self._client.disconnect())
         future.add_done_callback(lambda future: future.result())
+
+    @staticmethod
+    def get_auth_token(reflesh_token):
+        """reflesh_tokenから内部で利用する恒常的なtokenへ変換する
+        reflesh_tokenは一度しか使えないため注意"""
+        def get_code_f():
+            print("token", reflesh_token)
+            return reflesh_token
+
+        _, path = tempfile.mkstemp(text=True)
+        try:
+            hangups.auth._auth_with_code(get_code_f, path)
+        except hangups.GoogleAuthError as e:
+            print(e)
+        with open(path) as f:
+            token = f.read()
+        return token
